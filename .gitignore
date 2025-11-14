@@ -1,5 +1,8 @@
 **/a.out
 build/**
+build
+lib/**
+lib
 .vscode
 **/.env
 *.spv
@@ -8,3 +11,5 @@ littleVulkanEngine/sandbox/**
 textures_
 models/viking_room.obj
 imgui.ini
+
+.DS_Store

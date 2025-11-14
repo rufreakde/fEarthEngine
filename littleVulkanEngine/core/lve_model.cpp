@@ -162,8 +162,8 @@ void LveModel::Builder::loadModel(std::string filepath) {
   std::vector<tinyobj::material_t> materials;
   std::string warn, err;
 
-  if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str())) {
-    throw std::runtime_error(warn + err);
+  if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filepath.c_str(), nullptr)) {
+    throw std::runtime_error(err);
   }
 
   vertices.clear();
