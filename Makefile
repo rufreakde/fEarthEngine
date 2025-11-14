@@ -1,6 +1,6 @@
 include .env
 
-CFLAGS = -std=c++17 -I. -I$(LVE_PATH) -I$(VULKAN_SDK_PATH)/include -I$(STB_INCLUDE_PATH) -I$(TINYOBJ_INCLUDE_PATH) -g
+CFLAGS = -std=c++17 -I. -I$(LVE_PATH) -I$(VULKAN_SDK_PATH)/include -I$(GLFW_INCLUDE_PATH) -I$(STB_INCLUDE_PATH) -I$(TINYOBJ_INCLUDE_PATH) -g
 LDFLAGS = -L$(VULKAN_SDK_PATH)/lib `pkg-config --static --libs glfw3` -lvulkan
 
 ODIR=build
@@ -35,6 +35,7 @@ DEPFILES := $(SRCS:%.cpp=$(DEPDIR)/%.d)
 COMPILE.c = g++ $(DEPFLAGS) $(CFLAGS) -c
 
 $(ODIR)/%.o : %.cpp $(DEPDIR)/%.d | $(DEPDIR)
+	@mkdir -p $(@D)
 	g++ $(DEPFLAGS) $(CFLAGS) -c $<
 
 
