@@ -4,7 +4,7 @@
 ## The Engine's Mission
 
 fEarthEngine is a specialized, open-source `2D Real-Time Strategy (RTS)` game engine built on the high-performance Vulkan API. From a gamer for gamers.
-![FratEarthEngine Icon](img/flatEarthEngine.png)
+![FratEarthEngine Icon](sprites/flatEarthEngine.png)
 
 ## Core Philosophy: RTS Specialization
 

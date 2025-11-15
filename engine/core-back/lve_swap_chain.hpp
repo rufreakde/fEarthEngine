@@ -1,12 +1,21 @@
+/*
+ * Encapsulates a vulkan swap chain, and other functionality related to synchronization,
+ * image aquistion, presenting to the graphics queue, creating a render pass, framebuffers etc.
+ *
+ * Copyright (C) 2020 by Brendan Galea - https://github.com/blurrypiano/engine
+ *
+ * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+ */
+
 #pragma once
 
 #include "lve_device.hpp"
+#include "lve_window.hpp"
 
-// vulkan headers
-#include <vulkan/vulkan.h>
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
 // std lib headers
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -16,11 +25,12 @@ class LveSwapChain {
  public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-  LveSwapChain(LveDevice &deviceRef, VkExtent2D windowExtent);
-  LveSwapChain(
-      LveDevice &deviceRef, VkExtent2D windowExtent, std::shared_ptr<LveSwapChain> previous);
+  LveSwapChain(LveWindow &window, LveDevice &device) : window_{window}, device_{device} { init(); }
 
-  ~LveSwapChain();
+  ~LveSwapChain() {
+    cleanupSwapChain();
+    cleanupSyncObjects();
+  }
 
   LveSwapChain(const LveSwapChain &) = delete;
   LveSwapChain &operator=(const LveSwapChain &) = delete;
@@ -28,12 +38,11 @@ class LveSwapChain {
   VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
   VkRenderPass getRenderPass() { return renderPass; }
   VkImageView getImageView(int index) { return swapChainImageViews[index]; }
+  void recreateSwapChain();
+  void cleanupSwapChain();
   size_t imageCount() { return swapChainImages.size(); }
   VkFormat getSwapChainImageFormat() { return swapChainImageFormat; }
   VkExtent2D getSwapChainExtent() { return swapChainExtent; }
-  uint32_t width() { return swapChainExtent.width; }
-  uint32_t height() { return swapChainExtent.height; }
-
   float extentAspectRatio() {
     return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
   }
@@ -42,13 +51,9 @@ class LveSwapChain {
   VkResult acquireNextImage(uint32_t *imageIndex);
   VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
 
-  bool compareSwapFormats(const LveSwapChain &swapChain) const {
-    return swapChain.swapChainDepthFormat == swapChainDepthFormat &&
-           swapChain.swapChainImageFormat == swapChainImageFormat;
-  }
-
  private:
   void init();
+  void cleanupSyncObjects();
   void createSwapChain();
   void createImageViews();
   void createDepthResources();
@@ -64,7 +69,6 @@ class LveSwapChain {
   VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
   VkFormat swapChainImageFormat;
-  VkFormat swapChainDepthFormat;
   VkExtent2D swapChainExtent;
 
   std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -76,11 +80,10 @@ class LveSwapChain {
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
 
-  LveDevice &device;
-  VkExtent2D windowExtent;
+  LveWindow &window_;
+  LveDevice &device_;
 
   VkSwapchainKHR swapChain;
-  std::shared_ptr<LveSwapChain> oldSwapChain;
 
   std::vector<VkSemaphore> imageAvailableSemaphores;
   std::vector<VkSemaphore> renderFinishedSemaphores;

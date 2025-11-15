@@ -1,7 +1,7 @@
 include .env
 
 CFLAGS = -std=c++17 -I. -I$(LVE_PATH) -I$(VULKAN_SDK_PATH)/include -I$(GLFW_INCLUDE_PATH) -I$(STB_INCLUDE_PATH) -I$(TINYOBJ_INCLUDE_PATH) -g
-LDFLAGS = -L$(VULKAN_SDK_PATH)/lib `pkg-config --static --libs glfw3` -lvulkan
+LDFLAGS = -L$(VULKAN_SDK_PATH)/lib `pkg-config --static --libs glfw3` -lvulkan -rpath $(VULKAN_SDK_PATH)/lib
 
 ODIR=build
 DEPDIR := build
@@ -22,7 +22,7 @@ vertObjFiles = $(patsubst %.vert, %.vert.spv, $(vertSources))
 fragSources = $(shell find shaders -type f -name "*.frag")
 fragObjFiles = $(patsubst %.frag, %.frag.spv, $(fragSources))
 
-TARGET = a.out
+TARGET = build.out
 $(TARGET): $(vertObjFiles) $(fragObjFiles)
 ${TARGET}: $(coreObjFiles)
 ${TARGET}: $(generateObjFiles)

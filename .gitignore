@@ -8,6 +8,7 @@ lib
 *.spv
 engine/sandbox/**
 *.a
+*.out
 textures_
 models/viking_room.obj
 imgui.ini

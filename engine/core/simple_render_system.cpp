@@ -71,7 +71,7 @@ void SimpleRenderSystem::renderGameObjects(
     SimplePushConstantData push{};
     push.offset = obj.transform2d.translation;
     push.color = obj.color;
-    push.transform = obj.transform2d.mat2();
+    push.transform = obj.transform2d.mat3();
 
     vkCmdPushConstants(
         commandBuffer,
