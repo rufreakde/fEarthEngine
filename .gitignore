@@ -6,7 +6,7 @@ lib
 .vscode
 **/.env
 *.spv
-littleVulkanEngine/sandbox/**
+engine/sandbox/**
 *.a
 textures_
 models/viking_room.obj

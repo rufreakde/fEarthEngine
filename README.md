@@ -70,4 +70,4 @@ The following features are prioritized to make fEarthEngine a comprehensive solu
 - ☐ out of the box "in sync" RTS matches
 
 # 💝 Special thanks to:
--  [blurrypiano](https://github.com/blurrypiano) for his great tutorual and starting point [Project](https://github.com/blurrypiano/littleVulkanEngine)
+-  [blurrypiano](https://github.com/blurrypiano) for his great tutorual and starting point [Project](https://github.com/blurrypiano/engine)

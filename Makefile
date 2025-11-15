@@ -6,16 +6,16 @@ LDFLAGS = -L$(VULKAN_SDK_PATH)/lib `pkg-config --static --libs glfw3` -lvulkan
 ODIR=build
 DEPDIR := build
 DEPFLAGS = -o $@ -MMD -MP -MF $(DEPDIR)/$*.d
-SRCS = $(shell find littleVulkanEngine -type f -name "*.cpp")
+SRCS = $(shell find engine -type f -name "*.cpp")
 
-coreSources = $(shell find littleVulkanEngine/core -type f -name "*.cpp")
+coreSources = $(shell find engine/core -type f -name "*.cpp")
 coreObjFiles = $(patsubst %.cpp, $(ODIR)/%.o, $(coreSources))
 
-generateSources = $(shell find littleVulkanEngine/generate -type f -name "*.cpp")
-generateObjFiles = $(patsubst %.cpp, $(ODIR)/%.o, $(generateSources))
+# generateSources = $(shell find engine/generate -type f -name "*.cpp")
+# generateObjFiles = $(patsubst %.cpp, $(ODIR)/%.o, $(generateSources))
 
-experimentalSources = $(shell find littleVulkanEngine/experimental -type f -name "*.cpp")
-experimentalObjFiles = $(patsubst %.cpp, $(ODIR)/%.o, $(experimentalSources))
+# experimentalSources = $(shell find engine/experimental -type f -name "*.cpp")
+# experimentalObjFiles = $(patsubst %.cpp, $(ODIR)/%.o, $(experimentalSources))
 
 vertSources = $(shell find shaders -type f -name "*.vert")
 vertObjFiles = $(patsubst %.vert, %.vert.spv, $(vertSources))
