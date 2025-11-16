@@ -11,50 +11,43 @@
 namespace lve {
 
 struct Transform2dComponent {
-  glm::vec2 translation{};  // (position offset)
+  glm::vec2 translation{0.0f, 0.0f};  // (position offset)
   glm::vec2 scale{1.f, 1.f};
-  float rotation;
+  float rotation = 0.0f;              // Rotation angle (around Z-axis, in radians)
+  // Returns the combined 3x3 transformation matrix (Model Matrix).
+  // The matrix composition order is: Translation * Rotation_Pivot * Scale
+  glm::mat4 mat4() {
 
-  // Deprecated: Using mat3() is preferred for combining translation/scale/rotation.
-  // glm::mat2 mat2() {
-  //   const float s = glm::sin(rotation);
-  //   const float c = glm::cos(rotation);
-  //   glm::mat2 rotMatrix{{c, s}, {-s, c}};
+    // ommit Z
+    auto rot = glm::vec3{0.f, 0.f, rotation};
+    auto sca = glm::vec3( scale, 0);
 
-  //   glm::mat2 scaleMat{{scale.x, .0f}, {.0f, scale.y}};
-  //   return rotMatrix * scaleMat;
-  // }
-
-  // Returns a 3x3 transformation matrix for 2D transformations (Homogeneous Coordinates).
-  // The matrix combines rotation, scale, and translation.
-  glm::mat3 mat3() const {
-    // 1. Calculate sine and cosine of the single Z-axis rotation
-    const float s = glm::sin(rotation);
-    const float c = glm::cos(rotation);
-    
-    // 2. Initialize the 3x3 identity matrix
-    glm::mat3 result{1.f};
-    
-    // 3. Combine Rotation and Scaling (R * S) and place into the top-left 2x2 part.
-    // Order: Scale is applied first, then rotation.
-    
-    // Column 0 (X-axis vector: Rotated and Scaled X)
-    result[0][0] = c * scale.x;
-    result[0][1] = s * scale.x;
-    // result[0][2] = 0.f; // (Already 0 from initialization)
-    
-    // Column 1 (Y-axis vector: Rotated and Scaled Y)
-    result[1][0] = -s * scale.y;
-    result[1][1] = c * scale.y;
-    // result[1][2] = 0.f; // (Already 0 from initialization)
-
-    // 4. Insert Translation into the third column (the homogeneous coordinate vector).
-    // Column 2 (Translation vector)
-    result[2][0] = translation.x;
-    result[2][1] = translation.y;
-    // result[2][2] = 1.f; // (Already 1 from initialization)
-
-    return result;
+    const float c3 = glm::cos(rot.z);
+    const float s3 = glm::sin(rot.z);
+    const float c2 = glm::cos(rot.x);
+    const float s2 = glm::sin(rot.x);
+    const float c1 = glm::cos(rot.y);
+    const float s1 = glm::sin(rot.y);
+    return glm::mat4{
+        {
+            scale.x * (c1 * c3 + s1 * s2 * s3),
+            scale.x * (c2 * s3),
+            scale.x * (c1 * s2 * s3 - c3 * s1),
+            0.0f,
+        },
+        {
+            scale.y * (c3 * s1 * s2 - c1 * s3),
+            scale.y * (c2 * c3),
+            scale.y * (c1 * c3 * s2 + s1 * s3),
+            0.0f,
+        },
+        {
+            sca.z * (c2 * s1),
+            sca.z * (-s2),
+            sca.z * (c1 * c2),
+            0.0f,
+        },
+        {translation.x, translation.y, 0.f, 1.0f}};
   }
 };
 

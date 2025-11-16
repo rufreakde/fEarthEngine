@@ -1,5 +1,6 @@
 #include "first_app.hpp"
 
+#include "lve_camera.hpp"
 #include "simple_render_system.hpp"
 
 // libs
@@ -21,13 +22,19 @@ FirstApp::~FirstApp() {}
 
 void FirstApp::run() {
   SimpleRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass()};
+  LveCamera camera{};
+  
 
   while (!lveWindow.shouldClose()) {
     glfwPollEvents();
 
+    float aspect = lveRenderer.getAspectRatio();
+    // // https://youtu.be/YO46x8fALzE?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&t=405
+    camera.setOrthographicProjection(-aspect,aspect,-1,1,-1,1);
+
     if (auto commandBuffer = lveRenderer.beginFrame()) {
       lveRenderer.beginSwapChainRenderPass(commandBuffer);
-      simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects);
+      simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
       lveRenderer.endSwapChainRenderPass(commandBuffer);
       lveRenderer.endFrame();
     }
@@ -38,17 +45,18 @@ void FirstApp::run() {
 
 void FirstApp::loadGameObjects() {
   std::vector<LveModel::Vertex> vertices{
-      {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-      {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}};
+      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+      {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+      {{0.f, 0.5f}, {0.0f, 0.0f, 1.0f}}};
   auto lveModel = std::make_shared<LveModel>(lveDevice, vertices);
 
   auto triangle = LveGameObject::createGameObject();
   triangle.model = lveModel;
   triangle.color = {.1f, .8f, .1f};
-  triangle.transform2d.translation.x = .2f;
-  triangle.transform2d.scale = {2.f, .5f};
-  triangle.transform2d.rotation = .25f * glm::two_pi<float>();
+  // triangle.transform2d.translation.x = 0.f;
+  // triangle.transform2d.translation.y = 0.f;
+  // triangle.transform2d.scale = {1.f, 1.f};
+  // triangle.transform2d.rotation = 90.f;
 
   gameObjects.push_back(std::move(triangle));
 }
