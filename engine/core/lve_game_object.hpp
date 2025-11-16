@@ -47,7 +47,7 @@ struct Transform2dComponent {
             sca.z * (c1 * c2),
             0.0f,
         },
-        {translation.x, translation.y, 0.f, 1.0f}};
+        {translation.x, -translation.y, 0.f, 1.0f}}; // invert translation.y we want Y to be positive top and negative bottom just to avoid brainfucks
   }
 };
 

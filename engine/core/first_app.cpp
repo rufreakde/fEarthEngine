@@ -23,6 +23,9 @@ FirstApp::~FirstApp() {}
 void FirstApp::run() {
   SimpleRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass()};
   LveCamera camera{};
+
+  // position of test object
+  camera.setViewTarget2d(glm::vec2(0.f,0.f));
   
 
   while (!lveWindow.shouldClose()) {
@@ -53,9 +56,9 @@ void FirstApp::loadGameObjects() {
   auto triangle = LveGameObject::createGameObject();
   triangle.model = lveModel;
   triangle.color = {.1f, .8f, .1f};
-  // triangle.transform2d.translation.x = 0.f;
-  // triangle.transform2d.translation.y = 0.f;
-  // triangle.transform2d.scale = {1.f, 1.f};
+  triangle.transform2d.translation.x = 0.5f;
+  triangle.transform2d.translation.y = 0.5f;
+  triangle.transform2d.scale = {0.6f, 0.6f};
   // triangle.transform2d.rotation = 90.f;
 
   gameObjects.push_back(std::move(triangle));
