@@ -14,8 +14,8 @@
 namespace lve {
 
 struct SimplePushConstantData {
-  glm::mat3 transform{1.f};
-  alignas(16) glm::vec3 color;
+  glm::mat4 transform{1.f};
+  alignas(16) glm::vec3 color{};
 };
 
 SimpleRenderSystem::SimpleRenderSystem(LveDevice& device, VkRenderPass renderPass)
@@ -61,7 +61,9 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
 }
 
 void SimpleRenderSystem::renderGameObjects(
-    VkCommandBuffer commandBuffer, std::vector<LveGameObject>& gameObjects, const LveCamera &camera) {
+    VkCommandBuffer commandBuffer,
+    std::vector<LveGameObject>& gameObjects,
+    const LveCamera& camera) {
   lvePipeline->bind(commandBuffer);
 
   for (auto& obj : gameObjects) {

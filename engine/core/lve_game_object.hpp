@@ -11,7 +11,7 @@
 namespace lve {
 
 struct Transform2dComponent {
-  glm::vec2 translation{0.0f, 0.0f};  // (position offset)
+  glm::vec2 translation{};  // (position offset)
   glm::vec2 scale{1.f, 1.f};
   float rotation = 0.0f;              // Rotation angle (around Z-axis, in radians)
   // Returns the combined 3x3 transformation matrix (Model Matrix).
