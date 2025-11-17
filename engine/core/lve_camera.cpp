@@ -17,9 +17,9 @@ namespace lve {
     projectionMatrix[3][2] = -near / (far - near);
   }
 
-void LveCamera::setViewTarget2d(glm::vec2 target) {
-  auto target3d = glm::vec3(target, 0.f);
-  setViewEuler(target3d, glm::vec3{0.f,0.f,0.f});
+void LveCamera::setViewTarget2d(glm::vec2 position, float rotation) {
+  auto target3d = glm::vec3(position, 0.f);
+  setViewEuler(target3d, glm::vec3{0.f,0.f,rotation});
 }
 
 void LveCamera::setViewDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up) {

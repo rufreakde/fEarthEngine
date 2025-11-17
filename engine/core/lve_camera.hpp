@@ -13,7 +13,7 @@ namespace lve{
             // as the function is often expected to take them.
             void setOrthographicProjection(float left, float right, float top, float bottom, float near, float far);
 
-            void setViewTarget2d(glm::vec2 target);
+            void setViewTarget2d(glm::vec2 position, float rotation);
 
             // --- CHANGE 1: Return a mat3 projection matrix ---
             const glm::mat4& getProjection() const {return projectionMatrix; }
