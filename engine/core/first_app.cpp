@@ -39,10 +39,12 @@ void FirstApp::run() {
     glfwPollEvents();
 
     auto newTime = std::chrono::high_resolution_clock::now();
-    auto framteTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+    auto frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
     currentTime = newTime;
 
-    cameraController.move(lveWindow.getGLFWwindow(), framteTime, viewerObject);
+    frameTime = glm::min(frameTime, 144.f);
+
+    cameraController.move(lveWindow.getGLFWwindow(), frameTime, viewerObject);
     camera.setViewTarget2d(viewerObject.transform2d.position, viewerObject.transform2d.rotation);
 
     float aspect = lveRenderer.getAspectRatio();
@@ -61,21 +63,32 @@ void FirstApp::run() {
 }
 
 void FirstApp::loadGameObjects() {
-  std::vector<LveModel::Vertex> vertices{
+  glm::vec2 offset{0.f,0.f};
+  LveModel::Builder modelBuilder{};
+  modelBuilder.verticies = { // list to construct from
       {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
       {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-      {{0.f, 0.5f}, {0.0f, 0.0f, 1.0f}}};
-  auto lveModel = std::make_shared<LveModel>(lveDevice, vertices);
+      {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+      {{-0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+  };
 
-  auto triangle = LveGameObject::createGameObject( Unit );
-  triangle.model = lveModel;
-  triangle.color = {.1f, .8f, .1f};
-  triangle.transform2d.position.x = 0.5f;
-  triangle.transform2d.position.y = 0.5f;
-  triangle.transform2d.scale = {0.6f, 0.6f};
+  for (auto & v: modelBuilder.verticies){
+    v.position += offset;
+  }
+
+  modelBuilder.indicies = {0,1,2, 0,3,2}; // performance optimizatin we choose from our verticies list and construct the triangles via indicies from it
+
+  auto lveModel = std::make_shared<LveModel>(lveDevice, modelBuilder);
+
+  auto quad = LveGameObject::createGameObject( Unit );
+  quad.model = lveModel;
+  quad.color = {.1f, .8f, .1f};
+  quad.transform2d.position.x = 0.5f;
+  quad.transform2d.position.y = 0.5f;
+  quad.transform2d.scale = {0.6f, 0.6f};
   // triangle.transform2d.rotation = 90.f;
 
-  gameObjects.push_back(std::move(triangle));
+  gameObjects.push_back(std::move(quad));
 }
 
 }  // namespace lve
