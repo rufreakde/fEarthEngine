@@ -29,8 +29,8 @@ void FirstApp::run() {
   // position of test object
   camera.setViewTarget2d(glm::vec2(0.f,0.f), 0.f);
   
-  auto viewerObject = LveGameObject::createGameObject();
-  KeyboardMovementController cameraController{};
+  auto viewerObject = LveGameObject::createGameObject( Camera );
+  KeyboardMovementController cameraController{ };
 
   auto currentTime = std::chrono::high_resolution_clock::now();
  
@@ -43,7 +43,7 @@ void FirstApp::run() {
     currentTime = newTime;
 
     cameraController.move(lveWindow.getGLFWwindow(), framteTime, viewerObject);
-    camera.setViewTarget2d(viewerObject.transform2d.translation, viewerObject.transform2d.rotation);
+    camera.setViewTarget2d(viewerObject.transform2d.position, viewerObject.transform2d.rotation);
 
     float aspect = lveRenderer.getAspectRatio();
     // // https://youtu.be/YO46x8fALzE?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&t=405
@@ -67,11 +67,11 @@ void FirstApp::loadGameObjects() {
       {{0.f, 0.5f}, {0.0f, 0.0f, 1.0f}}};
   auto lveModel = std::make_shared<LveModel>(lveDevice, vertices);
 
-  auto triangle = LveGameObject::createGameObject();
+  auto triangle = LveGameObject::createGameObject( Unit );
   triangle.model = lveModel;
   triangle.color = {.1f, .8f, .1f};
-  triangle.transform2d.translation.x = 0.5f;
-  triangle.transform2d.translation.y = 0.5f;
+  triangle.transform2d.position.x = 0.5f;
+  triangle.transform2d.position.y = 0.5f;
   triangle.transform2d.scale = {0.6f, 0.6f};
   // triangle.transform2d.rotation = 90.f;
 

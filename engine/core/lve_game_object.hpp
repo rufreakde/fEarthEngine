@@ -11,7 +11,7 @@
 namespace lve {
 
 struct Transform2dComponent {
-  glm::vec2 translation{};  // (position offset)
+  glm::vec2 position{};  // (position offset)
   glm::vec2 scale{1.f, 1.f};
   float rotation = 0.0f;              // Rotation angle (around Z-axis, in radians)
   // Returns the combined 3x3 transformation matrix (Model Matrix).
@@ -47,17 +47,29 @@ struct Transform2dComponent {
             sca.z * (c1 * c2),
             0.0f,
         },
-        {translation.x, -translation.y, 0.f, 1.0f}}; // invert translation.y we want Y to be positive top and negative bottom just to avoid brainfucks
+        {position.x, -position.y, 0.f, 1.0f}}; // invert translation.y we want Y to be positive top and negative bottom just to avoid brainfucks
   }
 };
+
+  enum GameObjectType {
+      Camera = 100,
+      Unit = 200,
+      Building = 201,
+      Spell = 300,
+      Doodad = 400,
+      Terrain = 500,
+      Cliff = 600,
+      Resource = 700,
+      Misc = 800
+  };
 
 class LveGameObject {
  public:
   using id_t = unsigned int;
 
-  static LveGameObject createGameObject() {
+  static LveGameObject createGameObject(GameObjectType _type) {
     static id_t currentId = 0;
-    return LveGameObject{currentId++};
+    return LveGameObject{currentId++, _type};
   }
 
   LveGameObject(const LveGameObject &) = delete;
@@ -66,14 +78,18 @@ class LveGameObject {
   LveGameObject &operator=(LveGameObject &&) = default;
 
   id_t getId() { return id; }
+  GameObjectType getType() {
+    return gameObjectType;
+  }
 
   std::shared_ptr<LveModel> model{};
   glm::vec3 color{};
   Transform2dComponent transform2d{};
 
  private:
-  LveGameObject(id_t objId) : id{objId} {}
+  LveGameObject(id_t objId, GameObjectType _type) : id{objId} {}
 
   id_t id;
+  GameObjectType gameObjectType = Unit;
 };
 }  // namespace lve

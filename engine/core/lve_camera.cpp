@@ -66,8 +66,8 @@ void LveCamera::setViewEuler(glm::vec3 position, glm::vec3 rotation) {
   viewMatrix[0][2] = w.x;
   viewMatrix[1][2] = w.y;
   viewMatrix[2][2] = w.z;
-  viewMatrix[3][0] = -glm::dot(u, position);
-  viewMatrix[3][1] = glm::dot(v, position); // invert we want Y to be positive top and negative bottom just to avoid brainfucks
+  viewMatrix[3][0] = glm::dot(u, position);
+  viewMatrix[3][1] = -glm::dot(v, position); // invert we want Y to be positive top and negative bottom just to avoid brainfucks
   viewMatrix[3][2] = -glm::dot(w, position);
 }
 }
